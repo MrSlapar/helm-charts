@@ -57,11 +57,16 @@ spec:
           env:
             - name: "DEBUG"
               value: {{ .Values.env.DEBUG | quote }}
+          {{- if .Values.existingSecret.enabled }}
             - name: "PRIVATE_KEY"
               valueFrom:
                 secretKeyRef:
                   name: {{ .Values.existingSecret.name }}
                   key: {{ .Values.existingSecret.key }}
+          {{- else }}
+            - name: "PRIVATE_KEY"
+              value: {{ .Values.env.PRIVATE_KEY | quote }}
+          {{- end }}
             - name: "DOME_EVENTS_CONTRACT_ADDRESS"
               value: {{ .Values.env.DOME_EVENTS_CONTRACT_ADDRESS | quote }}
             - name: "DOME_EVENTS_CONTRACT_ABI"
